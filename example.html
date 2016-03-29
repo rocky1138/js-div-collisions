@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <title>Simple example to show how to use collisions.js</title>
+        <style>
+            html, body {
+                margin:0;
+                padding:0;
+            }
+            div.obstacle {
+                position:absolute;
+                left:150px;
+                top:150px;
+                width:128px;
+                height:128px;
+                background-color:#ccc;
+            }
+            div#player {
+                position:absolute;
+                width:32px;
+                height:32px;
+                left:50px;
+                top:150px;
+                background-color:#dd0;
+            }
+        </style>
+        <script src='lib/collisions.js'></script>
+        <script>
+        
+            'use strict';
+        
+            // Once the html has rendered, this runs.
+            window.onload = function () {
+                
+                // Detect obstacles on-screen.
+                // This can be run every frame if you have moving obstacles
+                // or only once if you don't (increased performance).
+                var obstacles = Collision.updateObstacles('obstacle');
+
+                // Our player.
+                Collision.setTargetId('player');
+                
+                // Game loop.
+                setInterval(function () {
+                
+                    var collisions = Collision.getCollisions(),
+                        i,
+                        numCollisions = [];
+
+                    // Are there any collisions this frame?
+                    numCollisions = collisions.length;
+
+                    // Find out what they're touching.
+                    for (i = 0; i < numCollisions; i++) {
+                    
+                        /**
+                         * Set breakpoint here to inspect.
+                         * horizontalEDiff - how far into the East side of the obstacle the player has collided.
+                         * horizontalWDiff - how far into the West side of the obstacle the player has collided.
+                         * obstacle - Details about the obstacle that's been touched.
+                         *     className - CSS class name of obstacle (e.g., lava, water, platform).
+                         *     rect - Details about the dimensions of the obstacle (how tall it is, where it is on screen).
+                         *         bottom
+                         *         height
+                         *         left
+                         *         right
+                         *         top
+                         *         width
+                         * touchingEast - Is the player touching the East side of the obstacle?
+                         * touchingNorth - Is the player touching the North side of the obstacle?
+                         * touchingSouth - Is the player touching the South side of the obstacle?
+                         * touchingWest - Is the player touching the West side of the obstacle?
+                         * verticalSDiff - how far into the South side of the obstacle the player has collided.
+                         * verticalNDiff - how far into the North side of the obstacle the player has collided.
+                         */
+                        if (collisions[i].touchingWest === true) {
+                            console.log('Player touched the West side of the obstacle.');
+                        }
+                    }
+                
+                }, 100);
+            }
+        </script>
+    </head>
+    </body>
+        <h1>Move the yellow box into the gray square using HTML inspector.</h1>
+        <h2>When it touches, a collision event will have occurred.</h2>
+        <div class='obstacle'></div>
+        <div id='player'></div>
+    </body>
+</html>
